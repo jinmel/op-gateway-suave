@@ -7,7 +7,7 @@ import "suave-std/protocols/Bundle.sol";
 import "solady/src/utils/JSONParserLib.sol";
 import "forge-std/console.sol";
 
-contract Gateway {
+contract Builder {
     event NewBuilderBidEvent(Suave.DataId dataId, uint64 decryptionCondition, address[] allowedPeekers, bytes envelope);
 
     string boostRelayUrl;
