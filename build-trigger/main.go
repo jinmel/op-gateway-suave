@@ -1,21 +1,20 @@
 package main
 
 import (
+	"context"
 	"crypto/ecdsa"
 	"fmt"
-
-	"github.com/r3labs/sse/v2"
+	"time"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/rpc"
 	"github.com/ethereum/go-ethereum/suave/sdk"
 )
 
 var (
 	kettleAddress = common.HexToAddress("b5feafbdd752ad52afb7e1bd2e40432a485bbb7f")
-	exNodeNetAddr = "http://localhost:8545"
+	suaveAddr     = "http://localhost:11545"
 
 	// This account is funded in both devnev networks
 	// address: 0xb5feafbdd752ad52afb7e1bd2e40432a485bbb7f
@@ -80,26 +79,43 @@ func DeployContract(artifact *Artifact, clt *Client) (*sdk.Contract, error) {
 }
 
 func main() {
-	mevmRpc, _ := rpc.Dial(exNodeNetAddr)
+	mevmRpc, _ := rpc.Dial(suaveAddr)
 	mevmClt := NewClient(mevmRpc, fundedAccount, kettleAddress)
+
+	balance, err := mevmClt.Client.RPC().BalanceAt(context.Background(), fundedAccount.Address(), nil)
+
+	fmt.Println("Address: ", fundedAccount.Address())
+	fmt.Println("balance: ", balance)
 
 	contract, err := DeployContract(GatewayContract, mevmClt)
 
 	if err != nil {
-		log.Error("failed to deploy contract: %v", err)
+		fmt.Printf("failed to deploy contract: %v\n", err)
+		return
 	}
 
-	log.Info("contract deployed at: %v", contract.Address())
+	fmt.Printf("contract deployed at: %v\n", contract.Address())
 
-	events := make(chan *sse.Event)
-	client := sse.NewClient("http://localhost:8080/events")
-
-	client.SubscribeChan("payload_attributes", events)
+	ticker := time.NewTicker(500 * time.Millisecond)
+	defer ticker.Stop()
 
 	for {
 		select {
-		case event := <-events:
-			fmt.Println("Event: ", event)
+		case <-ticker.C:
+			fmt.Println("Triggering build")
+			// peekers := []common.Address{common.HexToAddress("0x0000000000000000000000000000000042100001")}
+			result, err := contract.SendTransaction("build", []interface{}{
+				uint64(0), // not used.
+				"local",   // submits to local relay.
+				[]common.Address{common.HexToAddress("0xC8df3686b4Afb2BB53e60EAe97EF043FE03Fb829")},
+				[]common.Address{},
+			}, []byte{0x20, 0x30})
+
+			if err != nil {
+				fmt.Println("failed to trigger build: ", err)
+				continue
+			}
+			fmt.Printf("build triggered: %+v\n", result)
 		}
 	}
 }

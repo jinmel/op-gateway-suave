@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	GatewayContract = newArtifact("Gateway.sol/Builder.json")
+	GatewayContract = newArtifact("Builder.sol/Builder.json")
 )
 
 func newArtifact(name string) *Artifact {
