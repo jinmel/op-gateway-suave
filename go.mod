@@ -1,13 +1,10 @@
-module github.com/jinmel/build-trigger
+module github.com/jinmel/op-gateway-suave
 
 go 1.21.0
 
 replace github.com/ethereum/go-ethereum => github.com/flashbots/suave-geth v0.1.2-0.20240220210340-e84e2e4ce52c
 
-require (
-	github.com/ethereum/go-ethereum v1.13.14
-	github.com/r3labs/sse/v2 v2.10.0
-)
+require github.com/ethereum/go-ethereum v1.13.14
 
 require (
 	github.com/VictoriaMetrics/fastcache v1.12.1 // indirect
@@ -48,10 +45,8 @@ require (
 	github.com/yusufpapurcu/wmi v1.2.2 // indirect
 	golang.org/x/crypto v0.21.0 // indirect
 	golang.org/x/exp v0.0.0-20231110203233-9a3e6036ecaa // indirect
-	golang.org/x/net v0.21.0 // indirect
 	golang.org/x/sync v0.6.0 // indirect
 	golang.org/x/sys v0.18.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
-	gopkg.in/cenkalti/backoff.v1 v1.1.0 // indirect
 	gopkg.in/natefinch/npipe.v2 v2.0.0-20160621034901-c1b8fa8bdcce // indirect
 )

@@ -9,13 +9,14 @@ import (
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common/hexutil"
+	"github.com/jinmel/op-gateway-suave/utils"
 )
 
 var (
 	GatewayContract = newArtifact("Builder.sol/Builder.json")
 )
 
-func newArtifact(name string) *Artifact {
+func newArtifact(name string) *utils.Artifact {
 	// Get the caller's file path.
 	_, filename, _, _ := runtime.Caller(1)
 
@@ -43,15 +44,9 @@ func newArtifact(name string) *Artifact {
 		panic(fmt.Sprintf("failed to unmarshal artifact %s: %v", name, err))
 	}
 
-	return &Artifact{
+	return &utils.Artifact{
 		Abi:          artifactObj.Abi,
 		Code:         hexutil.MustDecode(artifactObj.Bytecode.Object),
 		DeployedCode: hexutil.MustDecode(artifactObj.DeployedBytecode.Object),
 	}
-}
-
-type Artifact struct {
-	Abi          *abi.ABI
-	DeployedCode []byte
-	Code         []byte
 }
