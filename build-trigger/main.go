@@ -28,7 +28,7 @@ func main() {
 	fmt.Println("Address: ", fundedAccount.Address())
 	fmt.Println("balance: ", balance)
 
-	contract, err := DeployContract(GatewayContract, mevmClt)
+	contract, err := utils.DeployContract(GatewayContract, mevmClt)
 
 	if err != nil {
 		fmt.Printf("failed to deploy contract: %v\n", err)
