@@ -2,6 +2,7 @@ package utils
 
 import (
 	"crypto/ecdsa"
+	"crypto/rand"
 	"fmt"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
@@ -22,6 +23,10 @@ func NewPrivKeyFromHex(hex string) *PrivKey {
 type PrivKey struct {
 	priv  *ecdsa.PrivateKey
 	nonce uint64
+}
+
+func (p *PrivKey) PrivateKey() *ecdsa.PrivateKey {
+	return p.priv
 }
 
 func (p *PrivKey) Address() common.Address {
@@ -72,4 +77,12 @@ type Artifact struct {
 	Abi          *abi.ABI
 	DeployedCode []byte
 	Code         []byte
+}
+
+func RandomAddress() (common.Address, error) {
+	bytes := make([]byte, 20)
+	if _, err := rand.Read(bytes); err != nil {
+		return common.Address{}, err
+	}
+	return common.BytesToAddress(bytes), nil
 }
