@@ -69,7 +69,7 @@ func sendEthRandomRecipients(client *ethclient.Client, n int) error {
 }
 
 func main() {
-	client, err := ethclient.Dial("http://localhost:9545")
+	client, err := ethclient.Dial("http://localhost:5545")
 
 	if err != nil {
 		panic(err)

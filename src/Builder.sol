@@ -6,14 +6,8 @@ import "suave-std/suavelib/Suave.sol";
 contract Builder {
     event NewBuilderBidEvent(Suave.DataId dataId, uint64 decryptionCondition, address[] allowedPeekers, bytes envelope);
 
-    event NewEvent(uint64 n);
-
     function emitNewBuilderBidEvent(Suave.DataRecord memory record, bytes memory envelope) public {
         emit NewBuilderBidEvent(record.id, record.decryptionCondition, record.allowedPeekers, envelope);
-    }
-
-    function callback(uint n) public {
-        emit NewEvent(uint64(n));
     }
 
     function build(
