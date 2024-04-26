@@ -37,7 +37,7 @@ func main() {
 
 	fmt.Printf("contract deployed at: %v\n", contract.Address())
 
-	ticker := time.NewTicker(500 * time.Millisecond)
+	ticker := time.NewTicker(1000 * time.Millisecond)
 	defer ticker.Stop()
 
 	for {
@@ -50,7 +50,7 @@ func main() {
 				"local",   // submits to local relay.
 				[]common.Address{common.HexToAddress("0xC8df3686b4Afb2BB53e60EAe97EF043FE03Fb829")},
 				[]common.Address{},
-			}, []byte{0x20, 0x30})
+			}, []byte{})
 
 			if err != nil {
 				fmt.Println("failed to trigger build: ", err)

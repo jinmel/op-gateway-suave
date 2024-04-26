@@ -4,10 +4,10 @@ pragma solidity ^0.8.19;
 import "suave-std/suavelib/Suave.sol";
 
 contract Builder {
-    event NewBuilderBidEvent(Suave.DataId dataId, uint64 decryptionCondition, address[] allowedPeekers, bytes envelope);
+    event NewBuilderBidEvent(Suave.DataId dataId, uint64 decryptionCondition, address[] allowedPeekers);
 
-    function emitNewBuilderBidEvent(Suave.DataRecord memory record, bytes memory envelope) public {
-        emit NewBuilderBidEvent(record.id, record.decryptionCondition, record.allowedPeekers, envelope);
+    function emitNewBuilderBidEvent(Suave.DataRecord memory record) public {
+        emit NewBuilderBidEvent(record.id, record.decryptionCondition, record.allowedPeekers);
     }
 
     function build(
@@ -24,9 +24,7 @@ contract Builder {
         Suave.BuildBlockArgs memory blockArgs;
         blockArgs.fillPending = true;
         (bytes memory builderBid, bytes memory envelope) = Suave.buildEthBlock(blockArgs, record.id, ""); // namespace not used.
-        Suave.confidentialStore(record.id, "default:v0:builderBids", builderBid);
-        Suave.confidentialStore(record.id, "default:v0:payloads", envelope);
         Suave.submitEthBlockToRelay(relayUrl, builderBid);
-        return bytes.concat(this.emitNewBuilderBidEvent.selector, abi.encode(record, envelope));
+        return bytes.concat(this.emitNewBuilderBidEvent.selector, abi.encode(record));
     }
 }
